@@ -22,6 +22,8 @@ rgb(246,247,248)
 var COLOR_BACKGROUND,
     COLOR_TEXT;
 
+var PICTURE_HEIGHT = 64;
+
 function setup() {
     var myCanvas = createCanvas(max(500,window.innerWidth*0.66), window.innerHeight);
 	myCanvas.parent('myCanvas');
@@ -47,7 +49,7 @@ function addPost(data){
     else{
         friendPostCount[name] = 1;
         friendPicture[name] = loadImage(pic, function(img){
-            var newH = min(100, img.height);
+            var newH = min(PICTURE_HEIGHT, img.height);
             img.resize(newH/img.height*img.width,newH);
         });
     }
@@ -62,8 +64,8 @@ function addPost(data){
 function draw() {
     background(COLOR_BACKGROUND);
     if(totalPostCount>0){
-        fill(COLOR_TEXT);
-        text("THANK YOU", 0,0, width,height);
+        drawLines();
+        drawPictures();
     }
     else{
         fill(COLOR_TEXT);
@@ -71,8 +73,32 @@ function draw() {
     }
 }
 
-function drawFriends(){
+function drawLines(){
+    push();
+    translate(width/2, height/2);
+    // draw lines
+    for(name in friendPicture){
+        var maxDistance = 0.5*min(width,height);
+        var distance = map(friendPostCount[name], 1,maxPostCount, maxDistance,PICTURE_HEIGHT*1.5);
+        rotate(TWO_PI/Object.keys(friendPicture).length);
+        strokeWeight(1);
+        stroke(COLOR_TEXT);
+        line(0,0, PICTURE_HEIGHT/2,-distance+PICTURE_HEIGHT/2);
+    }
+    pop();
+}
 
+function drawPictures(){
+    push();
+    translate(width/2, height/2);
+    // draw lines
+    for(name in friendPicture){
+        var maxDistance = 0.5*min(width,height);
+        var distance = map(friendPostCount[name], 1,maxPostCount, maxDistance,PICTURE_HEIGHT*1.5);
+        rotate(TWO_PI/Object.keys(friendPicture).length);
+        image(friendPicture[name], 0,-distance);
+    }
+    pop();
 }
 
 function windowResized() {
