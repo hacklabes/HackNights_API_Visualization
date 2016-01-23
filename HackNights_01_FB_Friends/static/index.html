@@ -1,0 +1,79 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:;base64,=">
+    <script language="javascript" type="text/javascript" src="libs/p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="sketch.js"></script>
+    <style>
+		body {margin: auto; width:66%;}
+        #myCanvas {margin: auto; }
+	</style>
+</head>
+
+<body>
+    <script>
+        var myID = '';
+
+        // load FB SDK
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        // inits app, and subscribes to be notified when user has logged in
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: '1667040290204775',
+                cookie: 'true',
+                xfbml: true,
+                version: 'v2.5'
+            });
+            FB.Event.subscribe('auth.authResponseChange', function(response) {
+                if (response.status == 'connected') {
+                    myID = response.authResponse.userID;
+                    onLogIn(response);
+                }
+            });
+        };
+
+        function logMeIn(){
+            document.getElementById("myCanvas").onclick = function(){};
+            FB.login(function(){}, {scope: "user_likes,"+
+                                    "user_friends,"+
+                                    "user_posts,"+
+                                    "user_photos,"+
+                                    "user_videos"});
+        }
+        function onLogIn(response){
+            console.log("logged in: "+myID);
+            // helper function to do paging
+            function addPostCallback(response){
+                for(var i=0; i<response.data.length; i++){
+                    var from = response.data[i].from;
+                    FB.api('/'+from.id+'/picture','GET',{"width":"500"}, (function(fname){
+                           return function(picRes){
+                                        if(picRes.data){
+                                            addPost({name:fname, pic:picRes.data.url});
+                                        }
+                                    };
+                            })(from.name)
+                          );
+                }
+                if(response.paging){
+                    var nextReq = response.paging.next.substring(response.paging.next.indexOf("/feed"));
+                    FB.api('/me'+nextReq,'GET',{"fields":"from,created_time","limit":"10000"},addPostCallback);
+                }
+            }
+            // Get times of all posts on feed
+            FB.api('/me/feed','GET',{"fields":"from,created_time","limit":"10000"},addPostCallback);
+        }
+
+    </script>
+
+    <!--- Page goes here -->
+    <div id='myCanvas' onClick="logMeIn()"></div>
+</body>    
+</html>
