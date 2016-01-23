@@ -1,6 +1,7 @@
 var friendPostCount = [];
 var friendPicture = [];
 var totalPostCount = 0;
+var maxPostCount = 0;
 
 /* SOME COLORS FROM FB PALETTE
 rgb(59,89,152)
@@ -45,9 +46,16 @@ function addPost(data){
     // if first time, start counter and add picture
     else{
         friendPostCount[name] = 1;
-        friendPicture[name] = pic;
+        friendPicture[name] = loadImage(pic, function(img){
+            var newH = min(100, img.height);
+            img.resize(newH/img.height*img.width,newH);
+        });
     }
 
+    // update counters (max and total)
+    if(friendPostCount[name] > maxPostCount){
+        maxPostCount = friendPostCount[name];
+    }
     totalPostCount = totalPostCount + 1;
 }
 
@@ -61,6 +69,10 @@ function draw() {
         fill(COLOR_TEXT);
         text("CLICK TO START", 0,0, width,height);
     }
+}
+
+function drawFriends(){
+
 }
 
 function windowResized() {
