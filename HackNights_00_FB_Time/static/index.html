@@ -40,6 +40,7 @@
         };
 
         function logMeIn(){
+            document.getElementById("myCanvas").onclick = function(){};
             FB.login(function(){}, {scope: "user_likes,"+
                                     "user_friends,"+
                                     "user_posts,"+
@@ -48,12 +49,18 @@
         }
         function onLogIn(response){
             console.log("logged in: "+myID);
-            // Get times of all posts on feed
-            FB.api('/me/feed','GET',{"fields":"from,created_time","limit":"5000"},function(response){
+            // helper function to do paging
+            function addPostCallback(response){
                 for(var i=0; i<response.data.length; i++){
                     addPost(response.data[i].created_time);
                 }
-            });
+                if(response.paging){
+                    var nextReq = response.paging.next.substring(response.paging.next.indexOf("/feed"));
+                    FB.api('/me'+nextReq,'GET',{"fields":"from,created_time","limit":"10000"},addPostCallback);
+                }
+            }
+            // Get times of all posts on feed
+            FB.api('/me/feed','GET',{"fields":"from,created_time","limit":"10000"},addPostCallback);
         }
 
     </script>
