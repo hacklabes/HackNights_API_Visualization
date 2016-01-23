@@ -33,6 +33,7 @@
             });
             FB.Event.subscribe('auth.authResponseChange', function(response) {
                 if (response.status == 'connected') {
+                    document.getElementById("myCanvas").onclick = function(){};
                     myID = response.authResponse.userID;
                     onLogIn(response);
                 }
@@ -40,7 +41,6 @@
         };
 
         function logMeIn(){
-            document.getElementById("myCanvas").onclick = function(){};
             FB.login(function(){}, {scope: "user_likes,"+
                                     "user_friends,"+
                                     "user_posts,"+
