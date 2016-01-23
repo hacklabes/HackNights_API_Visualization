@@ -85,7 +85,7 @@ function addPost(postDateString){
 function draw() {
     background(COLOR_BACKGROUND);
     if(maxPostPerHour>0){
-        drawPosts();        
+        drawPosts();
     }
     else{
         fill(COLOR_TEXT);
