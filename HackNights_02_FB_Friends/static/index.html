@@ -53,14 +53,17 @@
             function addPostCallback(response){
                 for(var i=0; i<response.data.length; i++){
                     var from = response.data[i].from;
-                    FB.api('/'+from.id+'/picture','GET',{"width":"500"}, (function(fname){
-                           return function(picRes){
-                                        if(picRes.data){
-                                            addPost({name:fname, pic:picRes.data.url});
-                                        }
-                                    };
-                            })(from.name)
-                          );
+                    // prevent adding own posts
+                    if(from.id != myID){
+                        FB.api('/'+from.id+'/picture','GET',{"width":"500"}, (function(fname){
+                               return function(picRes){
+                                            if(picRes.data){
+                                                addPost({name:fname, pic:picRes.data.url});
+                                            }
+                                        };
+                                })(from.name)
+                              );
+                    }
                 }
                 if(response.paging){
                     var nextReq = response.paging.next.substring(response.paging.next.indexOf("/feed"));
