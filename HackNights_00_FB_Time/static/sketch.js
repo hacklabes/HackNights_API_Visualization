@@ -7,6 +7,9 @@ var minutePostCount = [];
 // This is a 60-element array to keep track of post count per second
 var secondPostCount = [];
 
+// This is a variable with the total number of posts processed
+var totalPostCount = 0;
+
 // This is to keep track of the max number of posts per hour and per minute
 var maxPostPerHour = 0;
 var maxPostPerMinute = 0;
@@ -80,6 +83,8 @@ function addPost(postDateString){
     if(secondPostCount[postSecond] > maxPostPerSecond){
         maxPostPerSecond = secondPostCount[postSecond];
     }
+
+    totalPostCount = totalPostCount + 1;
 }
 
 function draw() {
