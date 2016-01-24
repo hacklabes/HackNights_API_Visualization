@@ -20,6 +20,7 @@ rgb(246,247,248)
 
 // For various colors
 var COLOR_BACKGROUND,
+    COLOR_LINES,
     COLOR_TEXT;
 
 var PICTURE_HEIGHT = 64;
@@ -27,6 +28,7 @@ var PICTURE_HEIGHT = 64;
 function setup() {
     var myCanvas = createCanvas(max(500,window.innerWidth*0.66), window.innerHeight);
 	myCanvas.parent('myCanvas');
+	imageMode(CENTER);
 	frameRate(24);
     smooth();
 
@@ -34,6 +36,7 @@ function setup() {
     textSize(64);
 
     COLOR_BACKGROUND = color(59,89,152);
+    COLOR_LINES = color(120,170,255);
     COLOR_TEXT = color(233,233,250);
 }
 
@@ -79,11 +82,19 @@ function drawLines(){
     // draw lines
     for(name in friendPicture){
         var maxDistance = 0.5*min(width,height);
-        var distance = map(friendPostCount[name], 1,maxPostCount, maxDistance,PICTURE_HEIGHT*1.5);
+        var distance = map(friendPostCount[name], 1,maxPostCount, maxDistance-PICTURE_HEIGHT/2,PICTURE_HEIGHT);
+
         rotate(TWO_PI/Object.keys(friendPicture).length);
         strokeWeight(1);
+        noFill();
+
+        // inner mandala
         stroke(COLOR_TEXT);
-        line(0,0, PICTURE_HEIGHT/2,-distance+PICTURE_HEIGHT/2);
+        arc(0,0, maxDistance/3, -distance, PI,0);
+
+        // outer mandala
+        stroke(COLOR_LINES);
+        ellipse(0,0, maxDistance, -2*distance);
     }
     pop();
 }
@@ -94,7 +105,7 @@ function drawPictures(){
     // draw lines
     for(name in friendPicture){
         var maxDistance = 0.5*min(width,height);
-        var distance = map(friendPostCount[name], 1,maxPostCount, maxDistance,PICTURE_HEIGHT*1.5);
+        var distance = map(friendPostCount[name], 1,maxPostCount, maxDistance-PICTURE_HEIGHT/2,PICTURE_HEIGHT);
         rotate(TWO_PI/Object.keys(friendPicture).length);
         image(friendPicture[name], 0,-distance);
     }
