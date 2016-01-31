@@ -1,14 +1,14 @@
 {
-  "name": "hacknights_api_simpleserver",
+  "name": "hacknights_api_fb_post_visualization",
   "version": "0.0.1",
-  "description": "simple server using node.js",
+  "description": "simple app for visualizing facebook wall post times",
   "main": "serve.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hacklabes/HackNights_API_Trigger.git"
+    "url": "git+https://github.com/hacklabes/HackNights_API_Visualization.git"
   },
   "author": "Thiago Hersan",
   "license": "ISC",
